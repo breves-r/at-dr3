@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chefe-service
+spec:
+  selector:
+    matchLabels:
+      app: chefe-service
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: chefe-service
+    spec:
+      containers:
+        - name: chefe-service
+          image: chefeservice:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8082
+          env:
+            - name: EUREKA_SERVER_URI
+              value: "http://eureka-server:8761/eureka/"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:h2:mem:testdb"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "sa"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "1234"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chefe-service
+spec:
+  type: NodePort
+  ports:
+    - port: 8082
+      targetPort: 8082
+      nodePort: 31001  # Escolha uma porta entre 30000 e 32767
+  selector:
+    app: chefe-service
+
