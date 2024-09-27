@@ -67,6 +67,4 @@ public class ChefeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessagePayload(ex.getMessage()));
         }
     }
-
-    //test deploy kube
 }
